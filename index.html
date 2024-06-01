@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator with JavaScript</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .calculator {
+            width: 80%;
+            max-width: 500px; 
+            height: auto;
+            padding: 1.5rem;
+            background-color: #ded3d3;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 2px solid black;
+        }
+        
+        #result {
+            width: 100%;
+            height: 80px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: rgb(134, 157, 136);
+            margin-bottom: 10px;
+            font-size: 40px;
+            border: none;
+            outline: none;
+        }
+
+        .num-btn, .clr-btn {
+            width: 90px;
+            height: 85px;
+            margin: 5px;
+            margin-inline-start: 10px;
+            margin-inline-end: 10px;
+            font-size: 30px;
+            text-align: center;
+            background-color: pink;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s;
+            border: 1px solid black;
+        }
+
+        .cal-btn {
+            width: 200px;
+            height: 80px;
+            margin: 5px;
+            margin-inline-start: 10px;
+            margin-inline-end: 10px;
+            font-size: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s;
+            text-align: center;
+            border: 1px solid black;
+            background-color: palevioletred;
+        }
+
+        .num-btn:hover, .clr-btn:hover, .cal-btn:hover {
+            background-color: hotpink;
+        }
+
+        .clr-btn {
+            background-color: palevioletred;
+        }
+
+        h1 {
+            font-size: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .calculator {
+                width: 100%;
+                max-width: 400px;
+                padding: 1rem;
+            }
+
+            .num-btn, .clr-btn {
+                width: 80px;
+                height: 80px;
+                font-size: 20px;
+                margin: 3px;
+                
+            }
+
+            .cal-btn {
+                width: 170px;
+                height: 80px;
+                font-size: 20px;
+                margin: 3px;
+            }
+
+            #result {
+                height: 60px;
+                font-size: 25px;
+
+            }
+
+            h1 {
+                font-size: 45px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .calculator {
+                width: 100%;
+                max-width: 300px;
+                padding: 1rem;
+            }
+
+            .num-btn, .clr-btn, .cal-btn {
+                width: 60px;
+                height: 60px;
+                font-size: 18px;
+                margin: 2px;
+            }
+
+            .cal-btn {
+                width: 130px;
+                height: 60px;
+                font-size: 18px;
+            }
+
+            #result {
+                height: 50px;
+                font-size: 20px;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+
+        }
+
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1 style=" color: rgb(250, 115, 137); text-align: center; ">CALCULATOR APP</h1>
+        <input type="text" id="result" disabled></br>
+        <table>
+            <tr>
+                <td><input type="button" value="Ac" onclick="clearInput()" class="clr-btn"></td>
+                <td><input type="button" value="del" onclick="deleteOne()" class="num-btn"></td>
+                <td><input type="button" value="%" onclick="percentage()" class="num-btn"></td>
+                <td><input type="button" value="/" onclick="divide()" class="num-btn"></td>
+            </tr>
+            <tr>
+                <td><input type="button" value="1" onclick="appendNumber(1)" class="num-btn"></td>
+                <td><input type="button" value="2" onclick="appendNumber(2)" class="num-btn"></td>
+                <td><input type="button" value="3" onclick="appendNumber(3)" class="num-btn"></td>
+                <td><input type="button" value="x" onclick="multiply()" class="num-btn"></td>
+            </tr>
+            <tr>
+                <td><input type="button" value="4" onclick="appendNumber(4)" class="num-btn"></td>
+                <td><input type="button" value="5" onclick="appendNumber(5)" class="num-btn"></td>
+                <td><input type="button" value="6" onclick="appendNumber(6)" class="num-btn"></td>
+                <td><input type="button" value="-" onclick="minus()" class="num-btn"></td>
+            </tr>
+            <tr>
+                <td><input type="button" value="7" onclick="appendNumber(7)" class="num-btn"></td>
+                <td><input type="button" value="8" onclick="appendNumber(8)" class="num-btn"></td>
+                <td><input type="button" value="9" onclick="appendNumber(9)" class="num-btn"></td>
+                <td><input type="button" value="+" onclick="add()" class="num-btn"></td>
+            </tr>
+            <tr>
+                <td><input type="button" value="." onclick="dot()" class="num-btn"></td>
+                <td><input type="button" value="0" onclick="appendNumber(0)" class="num-btn"></td>
+                <td colspan="2"><input type="button" value="=" onclick="calculate()" class="cal-btn"></td>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        let currentInput = '';
+        let currentOperator = '';
+
+        function deleteOne() {
+            currentInput = currentInput.slice(0, -1);
+            document.getElementById('result').value = currentInput;
+        }
+
+        function clearInput() {
+            currentInput = '';
+            currentOperator = '';
+            document.getElementById('result').value = '';
+        }
+
+        function percentage() {
+            const result = eval(currentInput) / 100;
+            document.getElementById('result').value = result;
+            currentInput = result.toString();
+        }
+
+        function appendNumber(number) {
+            currentInput += number;
+            document.getElementById('result').value = currentInput;
+        }
+
+        function divide() {
+            currentOperator = "/";
+            currentInput += currentOperator;
+            document.getElementById('result').value = currentInput;
+        }
+
+        function add() {
+            currentOperator = "+";
+            currentInput += currentOperator;
+            document.getElementById('result').value = currentInput;
+        }
+
+        function multiply() {
+            currentOperator = "*";
+            currentInput += currentOperator;
+            document.getElementById('result').value = currentInput;
+        }
+
+        function minus() {
+            currentOperator = "-";
+            currentInput += currentOperator;
+            document.getElementById('result').value = currentInput;
+        }
+
+        function dot() {
+            currentInput += '.';
+            document.getElementById('result').value = currentInput;
+        }
+
+        function calculate() {
+            const result = eval(currentInput);
+            if (result !== undefined) {
+                document.getElementById('result').value = result;
+                currentInput = result.toString();
+                currentOperator = '';
+            } else {
+                console.error("Error: Result is undefined.");
+            }
+        }
+    </script>
+</body>
+</html>
